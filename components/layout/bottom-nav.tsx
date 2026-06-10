@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User } from "lucide-react";
+import { Home, User, Search } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/types";
@@ -15,6 +15,7 @@ export function BottomNav() {
 
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
+    { href: "/search", icon: Search, label: "Search" },
     ...(user?.username
       ? [{ href: `/${user.username}`, icon: User, label: "Profile" }]
       : []),

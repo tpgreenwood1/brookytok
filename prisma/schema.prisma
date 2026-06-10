@@ -19,9 +19,10 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // App-specific fields
-  username      String    @unique
-  displayName   String?
-  bio           String?
+  username        String    @unique
+  displayUsername String?
+  displayName     String?
+  bio             String?
 
   sessions  Session[]
   accounts  Account[]

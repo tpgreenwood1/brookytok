@@ -35,6 +35,7 @@ export function ProfileHeader({
             <FollowButton
               username={user.username}
               initialIsFollowing={isFollowing}
+              className="mt-12"
             />
           )}
         </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, User, LogOut, Feather } from "lucide-react";
+import { Home, User, LogOut, Feather, Search } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/types";
@@ -22,6 +22,7 @@ export function Sidebar() {
 
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
+    { href: "/search", icon: Search, label: "Search" },
     ...(user?.username
       ? [{ href: `/${user.username}`, icon: User, label: "Profile" }]
       : []),

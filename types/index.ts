@@ -37,3 +37,14 @@ export type SessionUser = {
   displayName: string | null;
   bio: string | null;
 };
+
+export type UserSearchResult = {
+  id: string;
+  username: string;
+  displayName: string | null;
+  name: string;
+  image: string | null;
+  bio: string | null;
+  isFollowing: boolean;
+  _count: { followers: number };
+};

@@ -17,3 +17,21 @@ export async function getFeed(cursor?: string, limit = 20): Promise<PostWithAuth
     include: { author: { select: authorSelect } },
   });
 }
+
+export async function getFollowingFeed(
+  userId: string,
+  cursor?: string,
+  limit = 20
+): Promise<PostWithAuthor[]> {
+  return prisma.post.findMany({
+    take: limit,
+    ...(cursor && { skip: 1, cursor: { id: cursor } }),
+    where: {
+      author: {
+        followers: { some: { followerId: userId } },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    include: { author: { select: authorSelect } },
+  });
+}

@@ -7,9 +7,10 @@ import { followUser, unfollowUser } from "@/server/actions/follow.actions";
 interface FollowButtonProps {
   username: string;
   initialIsFollowing: boolean;
+  className?: string;
 }
 
-export function FollowButton({ username, initialIsFollowing }: FollowButtonProps) {
+export function FollowButton({ username, initialIsFollowing, className }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isPending, startTransition] = useTransition();
 
@@ -31,7 +32,7 @@ export function FollowButton({ username, initialIsFollowing }: FollowButtonProps
       variant={isFollowing ? "secondary" : "primary"}
       size="sm"
       disabled={isPending}
-      className="mt-12"
+      className={className}
       aria-label={isFollowing ? `Unfollow @${username}` : `Follow @${username}`}
     >
       {isFollowing ? "Unfollow" : "Follow"}
