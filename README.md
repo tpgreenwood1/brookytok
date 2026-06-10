@@ -50,6 +50,7 @@ Open `.env` and set:
 
 ```env
 DATABASE_URL="postgresql://postgres:password@localhost:5432/brookytok"
+# For Neon (prod): DATABASE_URL="postgresql://user:pass@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 BETTER_AUTH_SECRET="<generate with: openssl rand -hex 32>"
 BETTER_AUTH_URL="http://localhost:3000"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"

@@ -41,23 +41,23 @@ export function PostComposer() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex gap-3 p-4 border-b border-slate-100"
+      className="flex gap-3 p-4 border-b border-slate-200"
       aria-label="Create a new post"
     >
       <Avatar src={user.image} name={displayName} size="md" />
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 rounded-2xl border border-slate-200 focus-within:border-sky-400 focus-within:ring-1 focus-within:ring-sky-400 transition-shadow px-3 pt-2 pb-2">
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's happening?"
           rows={3}
           maxLength={MAX_CHARS + 50}
-          className="w-full text-slate-900 placeholder:text-slate-400 text-lg resize-none focus:outline-none bg-transparent leading-relaxed"
+          className="w-full text-slate-900 placeholder:text-slate-400 text-base resize-none focus:outline-none bg-transparent leading-relaxed"
           aria-label="Post content"
           disabled={isPending}
         />
         {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-between mt-1 pt-2 border-t border-slate-100">
           <span
             className={cn(
               "text-sm font-medium tabular-nums",

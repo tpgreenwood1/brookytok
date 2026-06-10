@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { formatRelativeTime } from "@/lib/utils";
 import type { PostWithAuthor } from "@/types";
@@ -45,6 +46,35 @@ export function PostCard({ post }: PostCardProps) {
         <p className="text-slate-900 mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
           {post.content}
         </p>
+        <div className="flex gap-5 mt-3 -ml-1.5" aria-label="Post actions">
+          <button
+            type="button"
+            aria-label="Reply"
+            className="flex items-center gap-1.5 text-slate-400 hover:text-sky-500 transition-colors group"
+          >
+            <span className="p-1.5 rounded-full group-hover:bg-sky-50 transition-colors">
+              <MessageCircle className="w-4 h-4" />
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-label="Repost"
+            className="flex items-center gap-1.5 text-slate-400 hover:text-emerald-500 transition-colors group"
+          >
+            <span className="p-1.5 rounded-full group-hover:bg-emerald-50 transition-colors">
+              <Repeat2 className="w-4 h-4" />
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-label="Like"
+            className="flex items-center gap-1.5 text-slate-400 hover:text-rose-500 transition-colors group"
+          >
+            <span className="p-1.5 rounded-full group-hover:bg-rose-50 transition-colors">
+              <Heart className="w-4 h-4" />
+            </span>
+          </button>
+        </div>
       </div>
     </article>
   );

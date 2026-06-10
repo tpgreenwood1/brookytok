@@ -28,7 +28,7 @@ export function ProfileHeader({
           <Avatar
             src={user.image}
             name={displayName}
-            size="lg"
+            size="xl"
             className="ring-4 ring-white"
           />
           {!isOwnProfile && (

@@ -38,7 +38,7 @@ git push -u origin main
 ## Step 2: Create a Neon Database
 
 1. Sign in to [neon.tech](https://neon.tech) and create a new project.
-2. Name it `brooky-tok`.
+2. Name it anything (e.g. `brooky-tok`). Neon always creates the default database as `neondb`.
 3. Select a region close to your users (e.g., `us-east-1`).
 4. After creation, go to **Connection Details** and copy the **Connection string** (it looks like `postgresql://...@ep-xxx.neon.tech/neondb?sslmode=require`).
 
@@ -52,7 +52,7 @@ On your local machine, temporarily point at the Neon database to run the initial
 
 ```bash
 # Backup your local .env first, then set Neon DATABASE_URL:
-DATABASE_URL="postgresql://user:pass@ep-xxx.neon.tech/brookytok?sslmode=require" \
+DATABASE_URL="postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require" \
   npx prisma migrate deploy
 ```
 

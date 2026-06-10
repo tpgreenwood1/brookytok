@@ -23,7 +23,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center h-16 z-50"
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center z-50 pb-[env(safe-area-inset-bottom)]"
       aria-label="Mobile navigation"
     >
       {navItems.map(({ href, icon: Icon, label }) => {
@@ -33,15 +33,13 @@ export function BottomNav() {
             key={href}
             href={href}
             className={cn(
-              "flex flex-col items-center gap-0.5 text-slate-400 px-6 py-2",
-              active && "text-slate-900"
+              "flex flex-col items-center gap-0.5 text-slate-400 px-6 py-3 min-h-[48px] justify-center",
+              active && "text-sky-500"
             )}
             aria-current={active ? "page" : undefined}
           >
-            <Icon
-              className={cn("w-6 h-6", active && "stroke-[2.5]")}
-            />
-            <span className="text-xs font-medium">{label}</span>
+            <Icon className={cn("w-6 h-6", active && "stroke-[2.5]")} />
+            <span className={cn("text-xs font-medium", active && "text-sky-500")}>{label}</span>
           </Link>
         );
       })}

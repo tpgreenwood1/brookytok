@@ -46,7 +46,7 @@ export function Sidebar() {
             className={cn(
               "flex items-center gap-3 px-4 py-3 rounded-full text-slate-600 hover:bg-slate-100 transition-colors font-medium",
               pathname === href &&
-                "bg-slate-100 text-slate-900 font-semibold"
+                "text-sky-500 font-semibold hover:bg-sky-50"
             )}
           >
             <Icon className="w-5 h-5" />
