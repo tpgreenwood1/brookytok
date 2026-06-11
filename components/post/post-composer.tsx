@@ -86,19 +86,8 @@ export function PostComposer() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
-  if (!session) return null;
-
-  const user = session.user as unknown as SessionUser;
-  const displayName = user.displayName ?? user.name;
-  const charsLeft = MAX_CHARS - content.length;
-  const isOverLimit = charsLeft < 0;
-  const hasContent = content.trim().length > 0;
-  const doneAttachments = attachments.filter((a) => a.status === "done");
-  const pendingAttachments = attachments.filter((a) => a.status === "uploading");
-  const canPost =
-    hasContent && !isOverLimit && !isPending && pendingAttachments.length === 0;
-
   // ── Upload logic ────────────────────────────────────────────────────────
+  // useCallback must be declared before the early return below
 
   const processFiles = useCallback(
     async (files: File[]) => {
@@ -187,6 +176,19 @@ export function PostComposer() {
     },
     [attachments.length]
   );
+
+  // Guard: render nothing until session is loaded
+  if (!session) return null;
+
+  const user = session.user as unknown as SessionUser;
+  const displayName = user.displayName ?? user.name;
+  const charsLeft = MAX_CHARS - content.length;
+  const isOverLimit = charsLeft < 0;
+  const hasContent = content.trim().length > 0;
+  const doneAttachments = attachments.filter((a) => a.status === "done");
+  const pendingAttachments = attachments.filter((a) => a.status === "uploading");
+  const canPost =
+    hasContent && !isOverLimit && !isPending && pendingAttachments.length === 0;
 
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
