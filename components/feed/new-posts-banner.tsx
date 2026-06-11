@@ -13,7 +13,7 @@ export function NewPostsBanner({ count, onRefresh }: NewPostsBannerProps) {
       <button
         type="button"
         onClick={onRefresh}
-        className="pointer-events-auto bg-brand text-white text-sm font-semibold px-5 py-2 rounded-full shadow-lg shadow-sky-500/25 hover:bg-brand-hover active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+        className="pointer-events-auto bg-brand text-white text-sm font-semibold px-5 py-2 rounded-full shadow-lg hover:bg-brand-hover active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
         aria-live="polite"
         aria-atomic="true"
       >

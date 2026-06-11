@@ -4,8 +4,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { AvatarUpload } from "./avatar-upload";
 import { BannerUpload } from "./banner-upload";
 import { FollowButton } from "./follow-button";
-import { formatDate } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import type { UserProfile } from "@/types";
 
 interface ProfileHeaderProps {
@@ -34,7 +34,7 @@ export function ProfileHeader({
         />
       ) : (
         <div
-          className="h-40 bg-gradient-to-r from-sky-400 to-indigo-500"
+          className="h-40 bg-gradient-to-r from-brand to-brand-hover"
           aria-hidden="true"
         />
       )}
@@ -64,13 +64,13 @@ export function ProfileHeader({
         </div>
 
         <div className="space-y-1">
-          <h1 className="text-xl font-bold text-foreground">{displayName}</h1>
-          <p className="text-fg-muted">@{user.username}</p>
+          <h1 className="text-base font-semibold text-foreground">{displayName}</h1>
+          <p className="text-sm text-fg-muted">@{user.username}</p>
           {user.bio && (
-            <p className="text-foreground mt-2 leading-relaxed">{user.bio}</p>
+            <p className="text-sm text-foreground mt-2 leading-relaxed">{user.bio}</p>
           )}
-          <div className="flex items-center gap-1.5 text-fg-muted text-sm pt-1">
-            <CalendarDays className="w-4 h-4" aria-hidden />
+          <div className="flex items-center gap-1.5 text-fg-muted text-xs pt-1">
+            <CalendarDays className="w-3.5 h-3.5" aria-hidden />
             <span>Joined {formatDate(user.createdAt)}</span>
           </div>
           <div className="flex gap-5 pt-2 text-sm">
@@ -79,28 +79,28 @@ export function ProfileHeader({
                 {user._count.posts}
               </strong>{" "}
               <span className="text-fg-muted">
-                {user._count.posts === 1 ? "Post" : "Posts"}
+                {user._count.posts === 1 ? "post" : "posts"}
               </span>
             </span>
             <span>
               <strong className="text-foreground font-semibold">
                 {user._count.following}
               </strong>{" "}
-              <span className="text-fg-muted">Following</span>
+              <span className="text-fg-muted">following</span>
             </span>
             <span>
               <strong className="text-foreground font-semibold">
                 {user._count.followers}
               </strong>{" "}
               <span className="text-fg-muted">
-                {user._count.followers === 1 ? "Follower" : "Followers"}
+                {user._count.followers === 1 ? "follower" : "followers"}
               </span>
             </span>
           </div>
         </div>
       </div>
       <div className="border-b border-border px-4">
-        <div className="py-3 font-semibold text-foreground border-b-[3px] border-foreground inline-block">
+        <div className="py-3 text-sm font-semibold text-foreground border-b-2 border-foreground inline-block">
           Posts
         </div>
       </div>

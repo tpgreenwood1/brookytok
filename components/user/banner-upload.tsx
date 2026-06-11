@@ -115,7 +115,7 @@ export function BannerUpload({ currentImage, className }: BannerUploadProps) {
         onClick={() => inputRef.current?.click()}
         disabled={isActive}
         aria-label="Change banner photo"
-        className="block w-full h-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset cursor-pointer"
+        className="block w-full h-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-inset cursor-pointer"
       >
         {displayImage ? (
           <img
@@ -125,7 +125,7 @@ export function BannerUpload({ currentImage, className }: BannerUploadProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-sky-400 to-indigo-500" aria-hidden />
+          <div className="w-full h-full bg-gradient-to-r from-brand to-brand-hover" aria-hidden />
         )}
 
         {/* Hover overlay — edit prompt */}

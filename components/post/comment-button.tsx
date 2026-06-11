@@ -8,9 +8,10 @@ interface CommentButtonProps {
   post: PostWithAuthor;
   isExpanded?: boolean;
   onToggle?: () => void;
+  showCount?: boolean;
 }
 
-export function CommentButton({ post, isExpanded, onToggle }: CommentButtonProps) {
+export function CommentButton({ post, isExpanded, onToggle, showCount = true }: CommentButtonProps) {
   return (
     <button
       type="button"
@@ -18,20 +19,13 @@ export function CommentButton({ post, isExpanded, onToggle }: CommentButtonProps
       aria-label={isExpanded ? "Hide replies" : "Show replies"}
       aria-expanded={isExpanded}
       className={cn(
-        "flex items-center gap-1.5 transition-colors group",
-        isExpanded ? "text-brand" : "text-fg-muted hover:text-brand"
+        "flex items-center gap-1.5 transition-colors",
+        isExpanded ? "text-brand" : "text-foreground"
       )}
     >
-      <span
-        className={cn(
-          "p-1.5 rounded-full transition-colors",
-          isExpanded ? "bg-brand-light" : "group-hover:bg-brand-light"
-        )}
-      >
-        <MessageCircle className="w-4 h-4" />
-      </span>
-      {post.replyCount > 0 && (
-        <span className="text-xs tabular-nums">{post.replyCount}</span>
+      <MessageCircle className="w-6 h-6 stroke-[1.5]" />
+      {showCount && post.replyCount > 0 && (
+        <span className="text-sm font-semibold tabular-nums">{post.replyCount}</span>
       )}
     </button>
   );

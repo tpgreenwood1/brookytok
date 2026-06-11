@@ -20,7 +20,7 @@ export function MediaGrid({ media, className }: MediaGridProps) {
   return (
     <div
       className={cn(
-        "mt-3 overflow-hidden rounded-2xl border border-border",
+        "overflow-hidden",
         count === 1 && "grid grid-cols-1",
         count === 2 && "grid grid-cols-2 gap-0.5",
         count === 3 && "grid grid-cols-2 gap-0.5",

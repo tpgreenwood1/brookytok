@@ -26,7 +26,7 @@ export function TimeRing({
       ? "#ef4444" // red-500
       : progress >= 0.7
         ? "#f59e0b" // amber-400
-        : "#0ea5e9"; // sky-500
+        : "#0095F6"; // brand blue
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
   const ariaLabel = `Time used: ${elapsedMinutes} minute${elapsedMinutes !== 1 ? "s" : ""} of ${limitMinutes} minute limit`;

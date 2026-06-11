@@ -101,7 +101,7 @@ export function ReplyComposer({
       <Avatar src={user.image} name={displayName} size="md" />
       <div
         className={cn(
-          "flex-1 min-w-0 rounded-2xl border transition-shadow px-3 pt-2 pb-2",
+          "flex-1 min-w-0 rounded-lg border transition-shadow px-3 pt-2 pb-2",
           "border-border focus-within:border-brand focus-within:ring-1 focus-within:ring-brand"
         )}
       >

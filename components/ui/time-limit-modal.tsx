@@ -24,10 +24,13 @@ export function TimeLimitModal({ open, onSnooze }: TimeLimitModalProps) {
   return (
     <dialog
       ref={dialogRef}
-      className="time-limit-dialog m-auto w-full max-w-sm rounded-2xl bg-background p-6 text-foreground shadow-2xl outline-none"
+      className="time-limit-dialog m-auto w-full max-w-sm rounded-t-xl bg-background p-6 text-foreground shadow-[0_4px_12px_rgba(0,0,0,0.15)] outline-none"
+      style={{ position: "fixed", bottom: 0, left: 0, right: 0, margin: 0, maxWidth: "100%" }}
       onKeyDown={(e) => e.key === "Escape" && e.preventDefault()}
     >
       <div className="flex flex-col items-center gap-4 text-center">
+        {/* Handle bar */}
+        <div className="w-10 h-1 rounded-full bg-border -mt-2 mb-0" aria-hidden="true" />
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
           <svg
             xmlns="http://www.w3.org/2000/svg"

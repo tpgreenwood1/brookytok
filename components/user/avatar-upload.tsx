@@ -121,7 +121,7 @@ export function AvatarUpload({
         onClick={() => inputRef.current?.click()}
         disabled={isActive}
         aria-label="Change profile photo"
-        className="block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 group cursor-pointer"
+        className="block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 group cursor-pointer"
       >
         <Avatar src={displayImage} name={displayName} size={size} />
 

@@ -54,7 +54,7 @@ function AttachmentTile({
   const isVideo = a.file.type.startsWith("video/");
 
   return (
-    <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+    <div className="relative aspect-square rounded-lg overflow-hidden bg-surface-2 border border-border">
       {/* Preview */}
       {isVideo ? (
         // eslint-disable-next-line jsx-a11y/media-has-caption
@@ -78,7 +78,7 @@ function AttachmentTile({
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
           <div className="w-3/4 h-1.5 bg-white/30 rounded-full overflow-hidden">
             <div
-              className="h-full bg-sky-400 rounded-full transition-all duration-150"
+              className="h-full bg-brand rounded-full transition-all duration-150"
               style={{ width: `${a.progress}%` }}
             />
           </div>

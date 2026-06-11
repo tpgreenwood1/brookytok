@@ -27,8 +27,8 @@ export default async function SearchPage({
 
   return (
     <Shell>
-      <div className="sticky top-0 bg-background/90 backdrop-blur-sm border-b border-border px-4 py-3 z-10">
-        <h1 className="text-lg font-bold text-foreground">Search</h1>
+      <div className="sticky top-0 bg-background border-b border-border px-4 h-[44px] flex items-center z-10">
+        <h1 className="text-base font-semibold text-foreground">Search</h1>
       </div>
       <div className="p-4 border-b border-border">
         <SearchBar initialQuery={query} />

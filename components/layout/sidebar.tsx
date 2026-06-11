@@ -31,7 +31,7 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-16 xl:w-56 h-screen sticky top-0 border-r border-border px-2 xl:px-3 py-5 gap-2 flex-shrink-0 bg-background">
+    <aside className="hidden flex-col w-16 xl:w-56 h-screen sticky top-0 border-r border-border px-2 xl:px-3 py-5 gap-2 flex-shrink-0 bg-background">
       <Link
         href="/"
         className="flex items-center justify-center xl:justify-start gap-2 px-2 xl:px-3 py-2.5 text-foreground mb-1"

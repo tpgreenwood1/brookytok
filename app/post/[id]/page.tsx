@@ -43,15 +43,15 @@ export default async function PostDetailPage({
   return (
     <Shell>
       {/* Header */}
-      <div className="sticky top-0 bg-background/90 backdrop-blur-sm border-b border-border px-4 py-3 z-10 flex items-center gap-3">
+      <div className="sticky top-0 bg-background border-b border-border px-3 h-[44px] flex items-center gap-3 z-10">
         <Link
           href="/"
           aria-label="Go back"
-          className="p-1.5 rounded-full hover:bg-muted transition-colors text-fg-muted"
+          className="flex items-center justify-center w-8 h-8 text-foreground"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <h1 className="text-lg font-bold">Post</h1>
+        <h1 className="text-base font-semibold">Post</h1>
       </div>
 
       {/* The post itself in detail view */}

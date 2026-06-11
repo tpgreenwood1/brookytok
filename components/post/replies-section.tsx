@@ -39,7 +39,7 @@ export function RepliesSection({ postId, parentAuthorUsername }: RepliesSectionP
   }
 
   return (
-    <div className="border-l-2 border-brand ml-6 pl-0">
+    <div className="border-l border-border ml-6 pl-0">
       <ReplyComposer
         parentPostId={postId}
         parentAuthorUsername={parentAuthorUsername}

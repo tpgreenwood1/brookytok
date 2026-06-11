@@ -15,10 +15,10 @@ export function FeedTabs({ activeTab }: FeedTabsProps) {
         role="tab"
         aria-selected={activeTab === "for-you"}
         className={cn(
-          "flex-1 py-3 text-sm font-medium text-center transition-colors",
+          "flex-1 py-3 text-sm font-semibold text-center transition-colors",
           activeTab === "for-you"
-            ? "text-brand border-b-[3px] border-brand"
-            : "text-fg-muted hover:text-foreground hover:bg-surface"
+            ? "text-foreground border-b-2 border-foreground"
+            : "text-fg-muted hover:text-foreground"
         )}
       >
         For you
@@ -28,10 +28,10 @@ export function FeedTabs({ activeTab }: FeedTabsProps) {
         role="tab"
         aria-selected={activeTab === "following"}
         className={cn(
-          "flex-1 py-3 text-sm font-medium text-center transition-colors",
+          "flex-1 py-3 text-sm font-semibold text-center transition-colors",
           activeTab === "following"
-            ? "text-brand border-b-[3px] border-brand"
-            : "text-fg-muted hover:text-foreground hover:bg-surface"
+            ? "text-foreground border-b-2 border-foreground"
+            : "text-fg-muted hover:text-foreground"
         )}
       >
         Following

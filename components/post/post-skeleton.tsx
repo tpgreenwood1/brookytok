@@ -3,24 +3,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function PostSkeleton() {
   return (
     <div
-      className="flex gap-3 py-4 px-4 border-b border-border-muted"
+      className="border-b border-border"
       aria-hidden="true"
     >
-      <Skeleton className="w-10 h-10 flex-shrink-0 rounded-full" />
-      <div className="flex-1 space-y-2.5 pt-0.5">
-        <div className="flex gap-2">
-          <Skeleton className="h-3.5 w-28 rounded-full" />
-          <Skeleton className="h-3.5 w-20 rounded-full" />
-        </div>
-        <Skeleton className="h-3.5 w-full rounded-full" />
-        <Skeleton className="h-3.5 w-4/5 rounded-full" />
-        <Skeleton className="h-3.5 w-1/2 rounded-full" />
+      {/* Header row */}
+      <div className="flex items-center gap-2 px-3 h-[52px]">
+        <Skeleton className="w-8 h-8 flex-shrink-0 rounded-full" />
+        <Skeleton className="h-3 w-28 rounded-full" />
+      </div>
+      {/* Media placeholder */}
+      <Skeleton className="w-full aspect-square" />
+      {/* Action bar */}
+      <div className="flex items-center gap-4 px-3 pt-2 pb-1">
+        <Skeleton className="h-6 w-6 rounded-full" />
+        <Skeleton className="h-6 w-6 rounded-full" />
+        <Skeleton className="h-6 w-6 rounded-full" />
+      </div>
+      {/* Caption */}
+      <div className="px-3 pb-3 space-y-2">
+        <Skeleton className="h-3 w-full rounded-full" />
+        <Skeleton className="h-3 w-3/4 rounded-full" />
+        <Skeleton className="h-2.5 w-16 rounded-full mt-1" />
       </div>
     </div>
   );
 }
 
-export function PostSkeletonList({ count = 5 }: { count?: number }) {
+export function PostSkeletonList({ count = 3 }: { count?: number }) {
   return (
     <div aria-label="Loading posts" aria-busy="true">
       {Array.from({ length: count }).map((_, i) => (
