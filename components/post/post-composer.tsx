@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/types";
 
 const MAX_CHARS = 280;
+const CIRCUMFERENCE = 2 * Math.PI * 10; // ≈ 62.83, r=10
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -71,6 +72,64 @@ function uploadToR2(
     xhr.setRequestHeader("Content-Type", file.type);
     xhr.send(file);
   });
+}
+
+// ── Circular progress arc for character counter ───────────────────────────────
+
+function CharCounter({ charsLeft }: { charsLeft: number }) {
+  const progress = Math.min((MAX_CHARS - charsLeft) / MAX_CHARS, 1);
+  const dashoffset = CIRCUMFERENCE * (1 - progress);
+  const isNearLimit = charsLeft <= 20;
+  const isOverLimit = charsLeft < 0;
+
+  const arcColor = isOverLimit
+    ? "var(--destructive)"
+    : isNearLimit
+      ? "#f59e0b"
+      : "var(--brand)";
+
+  return (
+    <div className="flex items-center gap-1.5" aria-live="polite" aria-label={`${charsLeft} characters remaining`}>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        style={{ transform: "rotate(-90deg)" }}
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          fill="none"
+          stroke="var(--border)"
+          strokeWidth="2"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          fill="none"
+          stroke={arcColor}
+          strokeWidth="2"
+          strokeDasharray={CIRCUMFERENCE}
+          strokeDashoffset={dashoffset}
+          strokeLinecap="round"
+          style={{ transition: "stroke-dashoffset 100ms linear, stroke 150ms" }}
+        />
+      </svg>
+      {isNearLimit && (
+        <span
+          className={cn(
+            "text-xs font-medium tabular-nums",
+            isOverLimit ? "text-destructive" : "text-amber-500"
+          )}
+        >
+          {charsLeft}
+        </span>
+      )}
+    </div>
+  );
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -263,7 +322,7 @@ export function PostComposer() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex gap-3 p-4 border-b border-slate-200"
+      className="flex gap-3 p-4 border-b border-border"
       aria-label="Create a new post"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -274,8 +333,8 @@ export function PostComposer() {
         className={cn(
           "flex-1 min-w-0 rounded-2xl border transition-shadow px-3 pt-2 pb-2",
           isDragOver
-            ? "border-sky-400 ring-1 ring-sky-400 bg-sky-50/30"
-            : "border-slate-200 focus-within:border-sky-400 focus-within:ring-1 focus-within:ring-sky-400"
+            ? "border-brand ring-1 ring-brand bg-brand-light/20"
+            : "border-border focus-within:border-brand focus-within:ring-1 focus-within:ring-brand"
         )}
       >
         <textarea
@@ -286,7 +345,7 @@ export function PostComposer() {
           }
           rows={3}
           maxLength={MAX_CHARS + 50}
-          className="w-full text-slate-900 placeholder:text-slate-400 text-base resize-none focus:outline-none bg-transparent leading-relaxed"
+          className="w-full text-foreground placeholder:text-fg-muted text-base resize-none focus:outline-none bg-transparent leading-relaxed"
           aria-label="Post content"
           disabled={isPending}
         />
@@ -298,12 +357,12 @@ export function PostComposer() {
         />
 
         {error && (
-          <p className="text-sm text-red-500 mt-2" role="alert">
+          <p className="text-sm text-destructive mt-2" role="alert">
             {error}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-1 pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-between mt-1 pt-2 border-t border-border-muted">
           <div className="flex items-center gap-1">
             {/* Image upload */}
             <input
@@ -321,7 +380,7 @@ export function PostComposer() {
               onClick={() => imageInputRef.current?.click()}
               disabled={atMaxAttachments || isPending}
               aria-label="Attach image"
-              className="p-1.5 rounded-full text-sky-500 hover:bg-sky-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-full text-brand hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ImageIcon className="w-4 h-4" />
             </button>
@@ -342,33 +401,20 @@ export function PostComposer() {
               onClick={() => videoInputRef.current?.click()}
               disabled={atMaxAttachments || isPending}
               aria-label="Attach video"
-              className="p-1.5 rounded-full text-sky-500 hover:bg-sky-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-full text-brand hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Video className="w-4 h-4" />
             </button>
 
             {attachments.length > 0 && (
-              <span className="text-xs text-slate-400 ml-1">
+              <span className="text-xs text-fg-muted ml-1">
                 {attachments.length}/{MAX_ATTACHMENTS_PER_POST}
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                "text-sm font-medium tabular-nums",
-                isOverLimit
-                  ? "text-red-500"
-                  : charsLeft <= 20
-                    ? "text-amber-500"
-                    : "text-slate-400"
-              )}
-              aria-live="polite"
-              aria-label={`${charsLeft} characters remaining`}
-            >
-              {charsLeft}
-            </span>
+            <CharCounter charsLeft={charsLeft} />
             <Button type="submit" disabled={!canPost} size="sm">
               {isPending
                 ? "Posting…"

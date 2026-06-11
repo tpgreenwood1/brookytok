@@ -9,7 +9,7 @@ interface FeedTabsProps {
 
 export function FeedTabs({ activeTab }: FeedTabsProps) {
   return (
-    <div className="flex border-b border-slate-200" role="tablist">
+    <div className="flex border-b border-border" role="tablist">
       <Link
         href="/"
         role="tab"
@@ -17,8 +17,8 @@ export function FeedTabs({ activeTab }: FeedTabsProps) {
         className={cn(
           "flex-1 py-3 text-sm font-medium text-center transition-colors",
           activeTab === "for-you"
-            ? "text-sky-500 border-b-2 border-sky-500"
-            : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+            ? "text-brand border-b-[3px] border-brand"
+            : "text-fg-muted hover:text-foreground hover:bg-surface"
         )}
       >
         For you
@@ -30,8 +30,8 @@ export function FeedTabs({ activeTab }: FeedTabsProps) {
         className={cn(
           "flex-1 py-3 text-sm font-medium text-center transition-colors",
           activeTab === "following"
-            ? "text-sky-500 border-b-2 border-sky-500"
-            : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+            ? "text-brand border-b-[3px] border-brand"
+            : "text-fg-muted hover:text-foreground hover:bg-surface"
         )}
       >
         Following

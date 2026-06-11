@@ -20,7 +20,7 @@ export function MediaGrid({ media, className }: MediaGridProps) {
   return (
     <div
       className={cn(
-        "mt-3 overflow-hidden rounded-2xl border border-slate-200",
+        "mt-3 overflow-hidden rounded-2xl border border-border",
         count === 1 && "grid grid-cols-1",
         count === 2 && "grid grid-cols-2 gap-0.5",
         count === 3 && "grid grid-cols-2 gap-0.5",
@@ -52,7 +52,7 @@ function MediaCell({ item, tall }: MediaCellProps) {
   const isVideo = item.mediaType === "video";
 
   const cellClass = cn(
-    "relative bg-slate-100 overflow-hidden",
+    "relative bg-surface overflow-hidden",
     tall ? "h-full min-h-[200px]" : "aspect-square"
   );
 

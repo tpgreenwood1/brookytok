@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, User, Search } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import type { SessionUser } from "@/types";
 
 export function BottomNav() {
@@ -23,26 +24,40 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center z-50 pb-[env(safe-area-inset-bottom)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-background border-t border-border flex items-center z-50 pb-[env(safe-area-inset-bottom)]"
       aria-label="Mobile navigation"
     >
-      {navItems.map(({ href, icon: Icon, label }) => {
-        const active = pathname === href;
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "flex flex-col items-center gap-0.5 text-slate-400 px-6 py-3 min-h-[48px] justify-center",
-              active && "text-sky-500"
-            )}
-            aria-current={active ? "page" : undefined}
-          >
-            <Icon className={cn("w-6 h-6", active && "stroke-[2.5]")} />
-            <span className={cn("text-xs font-medium", active && "text-sky-500")}>{label}</span>
-          </Link>
-        );
-      })}
+      <div className="flex-1 flex justify-around items-center h-full">
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              aria-label={label}
+              className={cn(
+                "flex items-center justify-center min-w-[56px] min-h-[56px]",
+                active ? "text-brand" : "text-fg-muted"
+              )}
+            >
+              <span
+                className={cn(
+                  "flex items-center justify-center w-10 h-10 rounded-full transition-colors",
+                  active && "bg-brand-light"
+                )}
+              >
+                <Icon
+                  className={cn("w-5 h-5", active && "stroke-[2.5]")}
+                />
+              </span>
+            </Link>
+          );
+        })}
+        <div className="flex items-center justify-center min-w-[56px] min-h-[56px]">
+          <ThemeToggle />
+        </div>
+      </div>
     </nav>
   );
 }

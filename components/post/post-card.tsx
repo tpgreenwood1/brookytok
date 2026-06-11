@@ -14,7 +14,7 @@ export function PostCard({ post }: PostCardProps) {
   const displayName = post.author.displayName ?? post.author.name;
 
   return (
-    <article className="flex gap-3 py-4 px-4 border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+    <article className="flex gap-3 py-4 px-4 border-b border-border-muted">
       <Link
         href={`/${post.author.username}`}
         className="flex-shrink-0 mt-0.5"
@@ -23,22 +23,23 @@ export function PostCard({ post }: PostCardProps) {
         <Avatar src={post.author.image} name={displayName} size="md" />
       </Link>
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-1.5 flex-wrap leading-tight">
-          <Link
-            href={`/${post.author.username}`}
-            className="font-semibold text-slate-900 hover:underline underline-offset-2 truncate"
-          >
-            {displayName}
-          </Link>
-          <Link
-            href={`/${post.author.username}`}
-            className="text-sm text-slate-500 hover:underline underline-offset-2"
-          >
-            @{post.author.username}
-          </Link>
-          <span className="text-slate-300 text-sm" aria-hidden>·</span>
+        <div className="flex items-baseline justify-between gap-1.5 leading-tight">
+          <div className="flex items-baseline gap-1.5 flex-wrap min-w-0">
+            <Link
+              href={`/${post.author.username}`}
+              className="font-semibold text-foreground hover:underline underline-offset-2 truncate"
+            >
+              {displayName}
+            </Link>
+            <Link
+              href={`/${post.author.username}`}
+              className="text-sm text-fg-muted hover:underline underline-offset-2 truncate"
+            >
+              @{post.author.username}
+            </Link>
+          </div>
           <time
-            className="text-sm text-slate-400"
+            className="text-xs text-fg-muted flex-shrink-0"
             dateTime={new Date(post.createdAt).toISOString()}
             title={new Date(post.createdAt).toLocaleString()}
           >
@@ -46,27 +47,27 @@ export function PostCard({ post }: PostCardProps) {
           </time>
         </div>
         {post.content && (
-          <p className="text-slate-900 mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
+          <p className="text-foreground mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
             {post.content}
           </p>
         )}
         {post.media.length > 0 && <MediaGrid media={post.media} />}
-        <div className="flex gap-5 mt-3 -ml-1.5" aria-label="Post actions">
+        <div className="flex items-center gap-4 mt-3 -ml-1.5" aria-label="Post actions">
           <button
             type="button"
             aria-label="Reply"
-            className="flex items-center gap-1.5 text-slate-400 hover:text-sky-500 transition-colors group"
+            className="flex items-center gap-1.5 text-fg-muted hover:text-brand transition-colors group"
           >
-            <span className="p-1.5 rounded-full group-hover:bg-sky-50 transition-colors">
+            <span className="p-1.5 rounded-full group-hover:bg-brand-light transition-colors">
               <MessageCircle className="w-4 h-4" />
             </span>
           </button>
           <button
             type="button"
             aria-label="Repost"
-            className="flex items-center gap-1.5 text-slate-400 hover:text-emerald-500 transition-colors group"
+            className="flex items-center gap-1.5 text-fg-muted hover:text-emerald-500 transition-colors group"
           >
-            <span className="p-1.5 rounded-full group-hover:bg-emerald-50 transition-colors">
+            <span className="p-1.5 rounded-full group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950/30 transition-colors">
               <Repeat2 className="w-4 h-4" />
             </span>
           </button>

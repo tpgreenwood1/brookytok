@@ -3,15 +3,54 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --surface-2: #f1f5f9;
+    --border: #e2e8f0;
+    --border-muted: #f1f5f9;
+    --text: #0f172a;
+    --muted: #64748b;
+    --brand: #0ea5e9;
+    --brand-hover: #0284c7;
+    --brand-light: #e0f2fe;
+    --destructive: #ef4444;
+  }
+
+  .dark {
+    --bg: #0a0a0a;
+    --surface: #111118;
+    --surface-2: #1a1a2e;
+    --border: #1e1e2e;
+    --border-muted: #16161f;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --brand: #0ea5e9;
+    --brand-hover: #0284c7;
+    --brand-light: #0c2540;
+    --destructive: #ef4444;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply antialiased text-slate-900 bg-white;
+    @apply antialiased bg-background text-foreground;
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-sky-500 ring-offset-2;
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-background;
   }
+}
+
+.animate-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-2) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s linear infinite;
 }

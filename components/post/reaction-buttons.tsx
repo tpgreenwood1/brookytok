@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { useState, useTransition, useEffect, useRef } from "react";
+import { Heart, ThumbsDown } from "lucide-react";
 import { reactToPost, removeReaction } from "@/server/actions/reaction.actions";
 import { cn } from "@/lib/utils";
 
@@ -22,10 +22,24 @@ export function ReactionButtons({
   const [dislikeCount, setDislikeCount] = useState(initialDislikeCount);
   const [myReaction, setMyReaction] = useState(initialMyReaction);
   const [isPending, startTransition] = useTransition();
+  const [isLikeAnimating, setIsLikeAnimating] = useState(false);
+  const likeAnimTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (likeAnimTimeout.current) clearTimeout(likeAnimTimeout.current);
+    };
+  }, []);
 
   function handleReact(type: "like" | "dislike") {
     const prev = myReaction;
     const isRemoving = prev === type;
+
+    if (type === "like") {
+      setIsLikeAnimating(true);
+      if (likeAnimTimeout.current) clearTimeout(likeAnimTimeout.current);
+      likeAnimTimeout.current = setTimeout(() => setIsLikeAnimating(false), 350);
+    }
 
     // Optimistic update
     setMyReaction(isRemoving ? null : type);
@@ -57,7 +71,7 @@ export function ReactionButtons({
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-3">
       <button
         type="button"
         onClick={() => handleReact("like")}
@@ -67,20 +81,23 @@ export function ReactionButtons({
         className={cn(
           "flex items-center gap-1.5 transition-colors group",
           myReaction === "like"
-            ? "text-sky-500"
-            : "text-slate-400 hover:text-sky-500"
+            ? "text-destructive"
+            : "text-fg-muted hover:text-destructive"
         )}
       >
         <span
           className={cn(
             "p-1.5 rounded-full transition-colors",
-            myReaction === "like" ? "bg-sky-50" : "group-hover:bg-sky-50"
+            myReaction === "like"
+              ? "bg-red-50 dark:bg-red-950/30"
+              : "group-hover:bg-red-50 dark:group-hover:bg-red-950/30"
           )}
         >
-          <ThumbsUp
+          <Heart
             className={cn(
               "w-4 h-4",
-              myReaction === "like" && "fill-sky-500"
+              isLikeAnimating && "animate-bounce-like",
+              myReaction === "like" && "fill-destructive"
             )}
           />
         </span>
@@ -96,29 +113,22 @@ export function ReactionButtons({
         aria-label={myReaction === "dislike" ? "Remove dislike" : "Dislike"}
         aria-pressed={myReaction === "dislike"}
         className={cn(
-          "flex items-center gap-1.5 transition-colors group",
+          "flex items-center gap-1 transition-colors group",
           myReaction === "dislike"
-            ? "text-rose-500"
-            : "text-slate-400 hover:text-rose-500"
+            ? "text-fg-muted"
+            : "text-fg-muted/60 hover:text-fg-muted"
         )}
       >
-        <span
-          className={cn(
-            "p-1.5 rounded-full transition-colors",
-            myReaction === "dislike"
-              ? "bg-rose-50"
-              : "group-hover:bg-rose-50"
-          )}
-        >
+        <span className="p-1 rounded-full transition-colors group-hover:bg-surface">
           <ThumbsDown
             className={cn(
-              "w-4 h-4",
-              myReaction === "dislike" && "fill-rose-500"
+              "w-3.5 h-3.5",
+              myReaction === "dislike" && "fill-current"
             )}
           />
         </span>
         {dislikeCount > 0 && (
-          <span className="text-xs tabular-nums">{dislikeCount}</span>
+          <span className="text-xs tabular-nums opacity-70">{dislikeCount}</span>
         )}
       </button>
     </div>

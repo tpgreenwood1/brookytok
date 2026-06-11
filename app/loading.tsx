@@ -1,31 +1,33 @@
 import { Shell } from "@/components/layout/shell";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PostSkeletonList } from "@/components/post/post-skeleton";
 
 export default function Loading() {
   return (
     <Shell>
-      <div className="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-slate-200 px-4 py-3">
-        <div className="h-6 w-16 bg-slate-200 rounded animate-pulse" />
+      {/* Sticky header skeleton */}
+      <div className="sticky top-0 bg-background/90 backdrop-blur-sm border-b border-border px-4 py-3">
+        <Skeleton className="h-5 w-14 rounded-full" />
       </div>
-      <div className="p-4 border-b border-slate-100 flex gap-3">
-        <div className="w-10 h-10 rounded-full bg-slate-200 animate-pulse flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="h-16 bg-slate-100 rounded animate-pulse" />
+
+      {/* Feed tabs skeleton */}
+      <div className="flex border-b border-border">
+        <div className="flex-1 py-3 flex justify-center">
+          <Skeleton className="h-4 w-16 rounded-full" />
+        </div>
+        <div className="flex-1 py-3 flex justify-center">
+          <Skeleton className="h-4 w-20 rounded-full" />
         </div>
       </div>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div
-          key={i}
-          className="p-4 border-b border-slate-100 flex gap-3"
-          aria-hidden="true"
-        >
-          <div className="w-10 h-10 rounded-full bg-slate-200 animate-pulse flex-shrink-0" />
-          <div className="flex-1 space-y-2">
-            <div className="h-4 bg-slate-200 rounded animate-pulse w-32" />
-            <div className="h-4 bg-slate-100 rounded animate-pulse w-full" />
-            <div className="h-4 bg-slate-100 rounded animate-pulse w-3/4" />
-          </div>
-        </div>
-      ))}
+
+      {/* Composer skeleton */}
+      <div className="flex gap-3 p-4 border-b border-border">
+        <Skeleton className="w-10 h-10 flex-shrink-0 rounded-full" />
+        <Skeleton className="flex-1 h-20 rounded-2xl" />
+      </div>
+
+      {/* Post skeletons */}
+      <PostSkeletonList count={5} />
     </Shell>
   );
 }
