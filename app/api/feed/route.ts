@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { getFeed } from "@/server/queries/feed.queries";
 
 export async function GET(req: NextRequest) {
@@ -9,6 +10,7 @@ export async function GET(req: NextRequest) {
     ? Math.min(Math.max(limitParam, 1), 50)
     : 20;
 
-  const posts = await getFeed(cursor, limit);
+  const session = await auth.api.getSession({ headers: req.headers });
+  const posts = await getFeed(cursor, limit, session?.user.id);
   return NextResponse.json(posts);
 }

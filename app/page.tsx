@@ -6,6 +6,7 @@ import { Shell } from "@/components/layout/shell";
 import { PostComposer } from "@/components/post/post-composer";
 import { PostList } from "@/components/post/post-list";
 import { FeedTabs } from "@/components/feed/feed-tabs";
+import { FeedWithRefresh } from "@/components/feed/feed-with-refresh";
 import { getFeed, getFollowingFeed } from "@/server/queries/feed.queries";
 import type { SessionUser } from "@/types";
 
@@ -26,7 +27,7 @@ export default async function HomePage({
   const posts =
     activeTab === "following"
       ? await getFollowingFeed(currentUser.id)
-      : await getFeed();
+      : await getFeed(undefined, 20, currentUser.id);
 
   const emptyMessage =
     activeTab === "following"
@@ -40,7 +41,9 @@ export default async function HomePage({
       </div>
       <FeedTabs activeTab={activeTab} />
       <PostComposer />
-      <PostList posts={posts} emptyMessage={emptyMessage} />
+      <FeedWithRefresh latestPostId={posts[0]?.id ?? null}>
+        <PostList posts={posts} emptyMessage={emptyMessage} />
+      </FeedWithRefresh>
     </Shell>
   );
 }

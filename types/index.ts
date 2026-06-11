@@ -28,6 +28,9 @@ export type PostWithAuthor = {
     image: string | null;
   };
   media: MediaItem[];
+  likeCount: number;
+  dislikeCount: number;
+  myReaction: "like" | "dislike" | null;
 };
 
 export type UserProfile = {

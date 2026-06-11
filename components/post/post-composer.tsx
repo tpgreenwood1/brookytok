@@ -187,8 +187,12 @@ export function PostComposer() {
   const hasContent = content.trim().length > 0;
   const doneAttachments = attachments.filter((a) => a.status === "done");
   const pendingAttachments = attachments.filter((a) => a.status === "uploading");
+  const hasDoneMedia = doneAttachments.length > 0;
   const canPost =
-    hasContent && !isOverLimit && !isPending && pendingAttachments.length === 0;
+    (hasContent || hasDoneMedia) &&
+    !isOverLimit &&
+    !isPending &&
+    pendingAttachments.length === 0;
 
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);

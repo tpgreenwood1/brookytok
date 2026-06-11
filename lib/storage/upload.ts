@@ -28,8 +28,24 @@ export type AllowedMediaType = (typeof ALLOWED_MEDIA_TYPES)[number];
 
 // ── Size limits ───────────────────────────────────────────────────────────────
 
-export const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
-export const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+// Defaults: 5 MB for images, 25 MB for videos. Override via env vars.
+// NEXT_PUBLIC_* so these work in both server and browser contexts.
+export function getMaxImageSizeBytes(): number {
+  const mb = parseInt(
+    process.env.NEXT_PUBLIC_MAX_IMAGE_FILE_SIZE_MB ?? "5",
+    10
+  );
+  return (Number.isFinite(mb) && mb > 0 ? mb : 5) * 1024 * 1024;
+}
+
+export function getMaxVideoSizeBytes(): number {
+  const mb = parseInt(
+    process.env.NEXT_PUBLIC_MAX_VIDEO_FILE_SIZE_MB ?? "25",
+    10
+  );
+  return (Number.isFinite(mb) && mb > 0 ? mb : 25) * 1024 * 1024;
+}
+
 export const MAX_ATTACHMENTS_PER_POST = 4;
 
 // ── Type guards ───────────────────────────────────────────────────────────────
@@ -51,7 +67,7 @@ export function getMediaCategory(mimeType: string): "image" | "video" {
 }
 
 export function getMaxFileSize(mimeType: string): number {
-  return isImageType(mimeType) ? MAX_IMAGE_SIZE_BYTES : MAX_VIDEO_SIZE_BYTES;
+  return isImageType(mimeType) ? getMaxImageSizeBytes() : getMaxVideoSizeBytes();
 }
 
 // ── Validation ────────────────────────────────────────────────────────────────
@@ -73,7 +89,7 @@ export function validateUpload(
   }
   const maxBytes = getMaxFileSize(mimeType);
   if (fileSize > maxBytes) {
-    const maxMb = maxBytes / (1024 * 1024);
+    const maxMb = Math.round(maxBytes / (1024 * 1024));
     return {
       valid: false,
       error: `File too large. Maximum size for this type is ${maxMb} MB.`,

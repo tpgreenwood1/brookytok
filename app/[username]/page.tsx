@@ -28,10 +28,10 @@ export async function generateMetadata({
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { username } = await params;
 
-  const [user, posts, session] = await Promise.all([
+  const session = await auth.api.getSession({ headers: await headers() });
+  const [user, posts] = await Promise.all([
     getUserByUsername(username),
-    getPostsByUsername(username),
-    auth.api.getSession({ headers: await headers() }),
+    getPostsByUsername(username, session?.user.id),
   ]);
 
   if (!user) notFound();

@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Heart, MessageCircle, Repeat2 } from "lucide-react";
+import { MessageCircle, Repeat2 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { MediaGrid } from "@/components/media/media-grid";
+import { ReactionButtons } from "@/components/post/reaction-buttons";
 import { formatRelativeTime } from "@/lib/utils";
 import type { PostWithAuthor } from "@/types";
 
@@ -44,9 +45,11 @@ export function PostCard({ post }: PostCardProps) {
             {formatRelativeTime(post.createdAt)}
           </time>
         </div>
-        <p className="text-slate-900 mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
-          {post.content}
-        </p>
+        {post.content && (
+          <p className="text-slate-900 mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
+            {post.content}
+          </p>
+        )}
         {post.media.length > 0 && <MediaGrid media={post.media} />}
         <div className="flex gap-5 mt-3 -ml-1.5" aria-label="Post actions">
           <button
@@ -67,15 +70,12 @@ export function PostCard({ post }: PostCardProps) {
               <Repeat2 className="w-4 h-4" />
             </span>
           </button>
-          <button
-            type="button"
-            aria-label="Like"
-            className="flex items-center gap-1.5 text-slate-400 hover:text-rose-500 transition-colors group"
-          >
-            <span className="p-1.5 rounded-full group-hover:bg-rose-50 transition-colors">
-              <Heart className="w-4 h-4" />
-            </span>
-          </button>
+          <ReactionButtons
+            postId={post.id}
+            initialLikeCount={post.likeCount}
+            initialDislikeCount={post.dislikeCount}
+            initialMyReaction={post.myReaction}
+          />
         </div>
       </div>
     </article>

@@ -29,7 +29,8 @@ export async function createPost(
   if (!session) return { error: "Unauthorized" };
 
   const trimmed = content.trim();
-  if (!trimmed) return { error: "Post cannot be empty" };
+  const hasMedia = media.length > 0;
+  if (!trimmed && !hasMedia) return { error: "Post must have text or media" };
   if (trimmed.length > 280) return { error: "Post exceeds 280 characters" };
 
   if (media.length > MAX_ATTACHMENTS_PER_POST) {

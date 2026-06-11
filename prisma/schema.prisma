@@ -24,11 +24,12 @@ model User {
   displayName     String?
   bio             String?
 
-  sessions  Session[]
-  accounts  Account[]
-  posts     Post[]
-  followers Follow[]  @relation("FollowTarget")
-  following Follow[]  @relation("FollowSource")
+  sessions   Session[]
+  accounts   Account[]
+  posts      Post[]
+  followers  Follow[]    @relation("FollowTarget")
+  following  Follow[]    @relation("FollowSource")
+  reactions  Reaction[]
 
   @@map("user")
 }
@@ -80,13 +81,14 @@ model Verification {
 // ── App models ────────────────────────────────────────────────────────────────
 
 model Post {
-  id        String   @id @default(cuid())
-  content   String   @db.VarChar(280)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid())
+  content   String     @db.VarChar(280)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   media     Media[]
+  reactions Reaction[]
 
   @@index([authorId])
   @@index([createdAt(sort: Desc)])
@@ -135,4 +137,21 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@map("follow")
+}
+
+// One reaction per user per post ("like" or "dislike", mutually exclusive).
+model Reaction {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  type      String   // "like" | "dislike"
+  createdAt DateTime @default(now())
+
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("reaction")
 }

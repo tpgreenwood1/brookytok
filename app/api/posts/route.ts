@@ -77,8 +77,12 @@ export async function POST(req: NextRequest) {
   }
 
   const content = typeof body.content === "string" ? body.content.trim() : "";
-  if (!content) {
-    return NextResponse.json({ error: "Content is required" }, { status: 400 });
+  const rawMedia = Array.isArray(body.media) ? body.media : [];
+  if (!content && rawMedia.length === 0) {
+    return NextResponse.json(
+      { error: "Post must have text or media" },
+      { status: 400 }
+    );
   }
   if (content.length > 280) {
     return NextResponse.json(
@@ -86,8 +90,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-
-  const rawMedia = Array.isArray(body.media) ? body.media : [];
   if (rawMedia.length > MAX_ATTACHMENTS_PER_POST) {
     return NextResponse.json(
       { error: `Maximum ${MAX_ATTACHMENTS_PER_POST} media items per post` },

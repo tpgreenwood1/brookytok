@@ -1,4 +1,5 @@
 import { Avatar } from "@/components/ui/avatar";
+import { AvatarUpload } from "./avatar-upload";
 import { FollowButton } from "./follow-button";
 import { formatDate } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
@@ -25,12 +26,21 @@ export function ProfileHeader({
       />
       <div className="px-4 pb-4">
         <div className="flex justify-between items-start -mt-10 mb-3">
-          <Avatar
-            src={user.image}
-            name={displayName}
-            size="xl"
-            className="ring-4 ring-white"
-          />
+          {isOwnProfile ? (
+            <AvatarUpload
+              currentImage={user.image}
+              displayName={displayName}
+              size="xl"
+              className="ring-4 ring-white rounded-full"
+            />
+          ) : (
+            <Avatar
+              src={user.image}
+              name={displayName}
+              size="xl"
+              className="ring-4 ring-white"
+            />
+          )}
           {!isOwnProfile && (
             <FollowButton
               username={user.username}
