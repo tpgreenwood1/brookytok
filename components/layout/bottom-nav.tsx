@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, User, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Home, User, Search, LogOut } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -11,6 +11,12 @@ import type { SessionUser } from "@/types";
 export function BottomNav() {
   const { data: session } = authClient.useSession();
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/signin");
+  };
 
   const user = session?.user as unknown as SessionUser | undefined;
 
@@ -57,6 +63,17 @@ export function BottomNav() {
         <div className="flex items-center justify-center min-w-[56px] min-h-[56px]">
           <ThemeToggle />
         </div>
+        {session && (
+          <div className="flex items-center justify-center min-w-[56px] min-h-[56px]">
+            <button
+              onClick={handleSignOut}
+              aria-label="Sign out"
+              className="flex items-center justify-center w-10 h-10 rounded-full text-fg-muted hover:bg-surface hover:text-foreground transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -37,7 +37,10 @@ export default async function HomePage({
   return (
     <Shell>
       <div className="sticky top-0 bg-background/90 backdrop-blur-sm border-b border-border px-4 py-3 z-10">
-        <h1 className="text-lg font-bold text-foreground">Home</h1>
+        <h1 className="text-lg font-bold text-foreground">
+          <span className="md:hidden">Brooky-Tok</span>
+          <span className="hidden md:block">Home</span>
+        </h1>
       </div>
       <FeedTabs activeTab={activeTab} />
       <PostComposer />
