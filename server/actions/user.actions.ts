@@ -31,3 +31,29 @@ export async function updateProfilePhoto(
   revalidatePath("/");
   return { success: true };
 }
+
+export async function updateBannerImage(
+  imageUrl: string
+): Promise<{ error?: string; success?: boolean }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return { error: "Unauthorized" };
+
+  if (!imageUrl || typeof imageUrl !== "string") {
+    return { error: "imageUrl is required" };
+  }
+
+  const r2PublicUrl = process.env.R2_PUBLIC_URL?.replace(/\/$/, "");
+  if (!r2PublicUrl || !imageUrl.startsWith(r2PublicUrl)) {
+    return { error: "Invalid image URL" };
+  }
+
+  const user = await prisma.user.update({
+    where: { id: session.user.id },
+    data: { bannerImage: imageUrl },
+    select: { username: true },
+  });
+
+  revalidatePath(`/${user.username}`);
+  revalidatePath("/");
+  return { success: true };
+}

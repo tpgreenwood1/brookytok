@@ -23,6 +23,7 @@ model User {
   displayUsername String?
   displayName     String?
   bio             String?
+  bannerImage     String?
 
   sessions   Session[]
   accounts   Account[]

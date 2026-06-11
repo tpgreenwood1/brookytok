@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Feather } from "lucide-react";
+import { Feather, AlertCircle } from "lucide-react";
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get("error") ? "Sign in failed. Please try again." : null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -85,9 +88,13 @@ export default function SignInPage() {
             />
 
             {error && (
-              <p className="text-sm text-destructive" role="alert">
-                {error}
-              </p>
+              <div
+                role="alert"
+                className="flex gap-3 items-start rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+              >
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" aria-hidden />
+                <span>{error}</span>
+              </div>
             )}
 
             <Button

@@ -40,6 +40,7 @@ export type UserProfile = {
   name: string;
   bio: string | null;
   image: string | null;
+  bannerImage: string | null;
   createdAt: Date;
   _count: {
     posts: number;

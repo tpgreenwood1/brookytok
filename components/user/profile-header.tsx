@@ -1,5 +1,6 @@
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarUpload } from "./avatar-upload";
+import { BannerUpload } from "./banner-upload";
 import { FollowButton } from "./follow-button";
 import { formatDate } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
@@ -20,10 +21,21 @@ export function ProfileHeader({
 
   return (
     <header>
-      <div
-        className="h-40 bg-gradient-to-r from-sky-400 to-indigo-500"
-        aria-hidden="true"
-      />
+      {isOwnProfile ? (
+        <BannerUpload currentImage={user.bannerImage} />
+      ) : user.bannerImage ? (
+        <img
+          src={user.bannerImage}
+          alt=""
+          aria-hidden
+          className="h-40 w-full object-cover"
+        />
+      ) : (
+        <div
+          className="h-40 bg-gradient-to-r from-sky-400 to-indigo-500"
+          aria-hidden="true"
+        />
+      )}
       <div className="px-4 pb-4">
         <div className="flex justify-between items-end -mt-10 mb-3">
           {isOwnProfile ? (

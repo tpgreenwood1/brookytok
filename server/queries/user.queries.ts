@@ -11,6 +11,7 @@ export async function getUserByUsername(username: string): Promise<UserProfile |
       name: true,
       bio: true,
       image: true,
+      bannerImage: true,
       createdAt: true,
       _count: {
         select: {
