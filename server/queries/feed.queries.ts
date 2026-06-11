@@ -9,12 +9,18 @@ const authorSelect = {
   image: true,
 } as const;
 
-export async function getFeed(cursor?: string, limit = 20): Promise<PostWithAuthor[]> {
+export async function getFeed(
+  cursor?: string,
+  limit = 20
+): Promise<PostWithAuthor[]> {
   return prisma.post.findMany({
     take: limit,
     ...(cursor && { skip: 1, cursor: { id: cursor } }),
     orderBy: { createdAt: "desc" },
-    include: { author: { select: authorSelect } },
+    include: {
+      author: { select: authorSelect },
+      media: { orderBy: { createdAt: "asc" } },
+    },
   });
 }
 
@@ -32,6 +38,9 @@ export async function getFollowingFeed(
       },
     },
     orderBy: { createdAt: "desc" },
-    include: { author: { select: authorSelect } },
+    include: {
+      author: { select: authorSelect },
+      media: { orderBy: { createdAt: "asc" } },
+    },
   });
 }

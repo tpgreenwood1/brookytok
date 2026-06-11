@@ -86,10 +86,41 @@ model Post {
   updatedAt DateTime @updatedAt
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  media     Media[]
 
   @@index([authorId])
   @@index([createdAt(sort: Desc)])
   @@map("post")
+}
+
+// Stores metadata for images and videos attached to posts.
+// Binary data never enters the database — only R2 object keys and public URLs.
+model Media {
+  id              String   @id @default(cuid())
+  postId          String
+  post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // R2 storage
+  url             String   // Public CDN URL
+  objectKey       String   @unique // R2 object key, e.g. media/posts/{userId}/{uuid}
+
+  // Classification: "image" | "video"
+  mediaType       String
+
+  // Original file metadata
+  mimeType        String   // e.g. "image/jpeg", "video/mp4"
+  fileName        String
+  fileSize        Int      // bytes
+
+  // Optional dimension/duration metadata (populated client-side before upload)
+  width           Int?
+  height          Int?
+  durationSeconds Float?
+
+  createdAt       DateTime @default(now())
+
+  @@index([postId])
+  @@map("media")
 }
 
 model Follow {

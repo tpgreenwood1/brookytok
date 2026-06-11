@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
+import { MediaGrid } from "@/components/media/media-grid";
 import { formatRelativeTime } from "@/lib/utils";
 import type { PostWithAuthor } from "@/types";
 
@@ -46,6 +47,7 @@ export function PostCard({ post }: PostCardProps) {
         <p className="text-slate-900 mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
           {post.content}
         </p>
+        {post.media.length > 0 && <MediaGrid media={post.media} />}
         <div className="flex gap-5 mt-3 -ml-1.5" aria-label="Post actions">
           <button
             type="button"

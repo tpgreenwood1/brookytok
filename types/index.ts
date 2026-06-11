@@ -1,3 +1,19 @@
+export type MediaItem = {
+  id: string;
+  postId: string;
+  url: string;
+  objectKey: string;
+  /** "image" | "video" */
+  mediaType: string;
+  mimeType: string;
+  fileName: string;
+  fileSize: number;
+  width: number | null;
+  height: number | null;
+  durationSeconds: number | null;
+  createdAt: Date;
+};
+
 export type PostWithAuthor = {
   id: string;
   content: string;
@@ -11,6 +27,7 @@ export type PostWithAuthor = {
     name: string;
     image: string | null;
   };
+  media: MediaItem[];
 };
 
 export type UserProfile = {

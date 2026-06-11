@@ -9,10 +9,15 @@ const authorSelect = {
   image: true,
 } as const;
 
-export async function getPostsByUsername(username: string): Promise<PostWithAuthor[]> {
+export async function getPostsByUsername(
+  username: string
+): Promise<PostWithAuthor[]> {
   return prisma.post.findMany({
     where: { author: { username } },
     orderBy: { createdAt: "desc" },
-    include: { author: { select: authorSelect } },
+    include: {
+      author: { select: authorSelect },
+      media: { orderBy: { createdAt: "asc" } },
+    },
   });
 }
