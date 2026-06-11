@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["better-auth"],
+  // NOTE: Do not add "better-auth" to serverExternalPackages. Externalizing it
+  // makes better-auth/react import its own copy of React from node_modules,
+  // while Next's prerenderer uses its vendored React. The two React instances
+  // don't share a hook dispatcher, so client hooks (useSession -> useRef) crash
+  // with "Cannot read properties of null (reading 'useRef')" during the static
+  // prerender of pages that render <Sidebar> (e.g. via the root loading.tsx).
   experimental: {
     serverActions: {
       allowedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],
