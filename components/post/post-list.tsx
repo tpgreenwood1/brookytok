@@ -1,3 +1,5 @@
+"use client";
+
 import { MessageSquare } from "lucide-react";
 import { PostCard } from "./post-card";
 import type { PostWithAuthor } from "@/types";
