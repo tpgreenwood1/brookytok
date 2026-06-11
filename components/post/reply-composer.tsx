@@ -1,14 +1,13 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Image as ImageIcon, Video } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { createPost, type MediaAttachment } from "@/server/actions/post.actions";
-import {
-  MediaAttachmentPreview,
-} from "@/components/media/media-attachment-preview";
+import { createComment, type MediaAttachment } from "@/server/actions/post.actions";
+import { MediaAttachmentPreview } from "@/components/media/media-attachment-preview";
 import {
   ALLOWED_IMAGE_TYPES,
   ALLOWED_VIDEO_TYPES,
@@ -18,74 +17,21 @@ import { useMediaAttachments } from "@/hooks/use-media-attachments";
 import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/types";
 
-const MAX_CHARS = 280;
-const CIRCUMFERENCE = 2 * Math.PI * 10; // ≈ 62.83, r=10
-
-// ── Circular progress arc for character counter ───────────────────────────────
-
-function CharCounter({ charsLeft }: { charsLeft: number }) {
-  const progress = Math.min((MAX_CHARS - charsLeft) / MAX_CHARS, 1);
-  const dashoffset = CIRCUMFERENCE * (1 - progress);
-  const isNearLimit = charsLeft <= 20;
-  const isOverLimit = charsLeft < 0;
-
-  const arcColor = isOverLimit
-    ? "var(--destructive)"
-    : isNearLimit
-      ? "#f59e0b"
-      : "var(--brand)";
-
-  return (
-    <div className="flex items-center gap-1.5" aria-live="polite" aria-label={`${charsLeft} characters remaining`}>
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        style={{ transform: "rotate(-90deg)" }}
-        aria-hidden="true"
-      >
-        <circle
-          cx="12"
-          cy="12"
-          r="10"
-          fill="none"
-          stroke="var(--border)"
-          strokeWidth="2"
-        />
-        <circle
-          cx="12"
-          cy="12"
-          r="10"
-          fill="none"
-          stroke={arcColor}
-          strokeWidth="2"
-          strokeDasharray={CIRCUMFERENCE}
-          strokeDashoffset={dashoffset}
-          strokeLinecap="round"
-          style={{ transition: "stroke-dashoffset 100ms linear, stroke 150ms" }}
-        />
-      </svg>
-      {isNearLimit && (
-        <span
-          className={cn(
-            "text-xs font-medium tabular-nums",
-            isOverLimit ? "text-destructive" : "text-amber-500"
-          )}
-        >
-          {charsLeft}
-        </span>
-      )}
-    </div>
-  );
+interface ReplyComposerProps {
+  parentPostId: string;
+  parentAuthorUsername: string;
+  onSuccess?: () => void;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
-
-export function PostComposer() {
+export function ReplyComposer({
+  parentPostId,
+  parentAuthorUsername,
+  onSuccess,
+}: ReplyComposerProps) {
   const { data: session } = authClient.useSession();
+  const router = useRouter();
   const [content, setContent] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isDragOver, setIsDragOver] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -102,42 +48,24 @@ export function PostComposer() {
     pendingAttachments,
   } = useMediaAttachments();
 
-  // Guard: render nothing until session is loaded
   if (!session) return null;
-
   const user = session.user as unknown as SessionUser;
   const displayName = user.displayName ?? user.name;
-  const charsLeft = MAX_CHARS - content.length;
-  const isOverLimit = charsLeft < 0;
   const hasContent = content.trim().length > 0;
   const hasDoneMedia = doneAttachments.length > 0;
-  const canPost =
+  const isOverLimit = content.length > 280;
+  const canSubmit =
     (hasContent || hasDoneMedia) &&
     !isOverLimit &&
     !isPending &&
     pendingAttachments.length === 0;
 
   const error = submitError ?? uploadError;
-
-  function handleDragOver(e: React.DragEvent) {
-    e.preventDefault();
-    setIsDragOver(true);
-  }
-
-  function handleDragLeave() {
-    setIsDragOver(false);
-  }
-
-  function handleDrop(e: React.DragEvent) {
-    e.preventDefault();
-    setIsDragOver(false);
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length) processFiles(files);
-  }
+  const atMaxAttachments = attachments.length >= MAX_ATTACHMENTS_PER_POST;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canPost) return;
+    if (!canSubmit) return;
     setSubmitError(null);
 
     const mediaPayload: MediaAttachment[] = doneAttachments.map((a) => ({
@@ -152,46 +80,39 @@ export function PostComposer() {
     }));
 
     startTransition(async () => {
-      const result = await createPost(content, mediaPayload);
+      const result = await createComment(parentPostId, content, mediaPayload);
       if (result.error) {
         setSubmitError(result.error);
       } else {
         setContent("");
         clearAttachments();
+        router.refresh();
+        onSuccess?.();
       }
     });
   }
-
-  const atMaxAttachments = attachments.length >= MAX_ATTACHMENTS_PER_POST;
 
   return (
     <form
       onSubmit={handleSubmit}
       className="flex gap-3 p-4 border-b border-border"
-      aria-label="Create a new post"
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+      aria-label="Write a reply"
     >
       <Avatar src={user.image} name={displayName} size="md" />
       <div
         className={cn(
           "flex-1 min-w-0 rounded-2xl border transition-shadow px-3 pt-2 pb-2",
-          isDragOver
-            ? "border-brand ring-1 ring-brand bg-brand-light/20"
-            : "border-border focus-within:border-brand focus-within:ring-1 focus-within:ring-brand"
+          "border-border focus-within:border-brand focus-within:ring-1 focus-within:ring-brand"
         )}
       >
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={
-            isDragOver ? "Drop media here…" : "What's happening?"
-          }
-          rows={3}
-          maxLength={MAX_CHARS + 50}
+          placeholder={`Reply to @${parentAuthorUsername}…`}
+          rows={2}
+          maxLength={330}
           className="w-full text-foreground placeholder:text-fg-muted text-base resize-none focus:outline-none bg-transparent leading-relaxed"
-          aria-label="Post content"
+          aria-label="Reply content"
           disabled={isPending}
         />
 
@@ -255,16 +176,13 @@ export function PostComposer() {
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <CharCounter charsLeft={charsLeft} />
-            <Button type="submit" disabled={!canPost} size="sm">
-              {isPending
-                ? "Posting…"
-                : pendingAttachments.length > 0
-                  ? "Uploading…"
-                  : "Post"}
-            </Button>
-          </div>
+          <Button type="submit" disabled={!canSubmit} size="sm">
+            {isPending
+              ? "Replying…"
+              : pendingAttachments.length > 0
+                ? "Uploading…"
+                : "Reply"}
+          </Button>
         </div>
       </div>
     </form>

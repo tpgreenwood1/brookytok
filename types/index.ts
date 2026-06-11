@@ -31,6 +31,14 @@ export type PostWithAuthor = {
   likeCount: number;
   dislikeCount: number;
   myReaction: "like" | "dislike" | null;
+  // Comments
+  parentId: string | null;
+  replyCount: number;
+  // Reposts
+  repostOfId: string | null;
+  repostOf: PostWithAuthor | null;
+  repostCount: number;
+  myRepost: boolean;
 };
 
 export type UserProfile = {

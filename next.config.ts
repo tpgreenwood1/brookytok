@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["better-auth"],
   experimental: {
     serverActions: {
       allowedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],

@@ -93,8 +93,20 @@ model Post {
   media     Media[]
   reactions Reaction[]
 
+  // Comments: a comment is a Post with parentId set (flat, one level deep)
+  parentId  String?
+  parent    Post?      @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Post[]     @relation("PostReplies")
+
+  // Reposts: a repost is a Post with repostOfId set (content is always "")
+  repostOfId String?
+  repostOf   Post?     @relation("PostReposts", fields: [repostOfId], references: [id], onDelete: Cascade)
+  reposts    Post[]    @relation("PostReposts")
+
   @@index([authorId])
   @@index([createdAt(sort: Desc)])
+  @@index([parentId])
+  @@index([repostOfId])
   @@map("post")
 }
 

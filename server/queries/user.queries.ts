@@ -16,7 +16,7 @@ export async function getUserByUsername(username: string): Promise<UserProfile |
       createdAt: true,
       _count: {
         select: {
-          posts: true,
+          posts: { where: { parentId: null } },
           followers: true,
           following: true,
         },

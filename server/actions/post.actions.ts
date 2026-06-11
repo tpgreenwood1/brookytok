@@ -70,3 +70,61 @@ export async function createPost(
   revalidatePath("/");
   return { success: true };
 }
+
+export async function createComment(
+  parentPostId: string,
+  content: string,
+  media: MediaAttachment[] = []
+): Promise<{ error?: string; success?: boolean }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return { error: "Unauthorized" };
+
+  const trimmed = content.trim();
+  const hasMedia = media.length > 0;
+  if (!trimmed && !hasMedia) return { error: "Reply must have text or media" };
+  if (trimmed.length > 280) return { error: "Reply exceeds 280 characters" };
+
+  if (media.length > MAX_ATTACHMENTS_PER_POST) {
+    return { error: `Maximum ${MAX_ATTACHMENTS_PER_POST} media items per post` };
+  }
+
+  for (const item of media) {
+    if (!item.objectKey.startsWith(`media/posts/${session.user.id}/`)) {
+      return { error: "Invalid media reference" };
+    }
+    if (!isAllowedMediaType(item.mimeType)) {
+      return { error: `Unsupported media type: ${item.mimeType}` };
+    }
+  }
+
+  const parentPost = await prisma.post.findUnique({
+    where: { id: parentPostId },
+    select: { id: true, parentId: true },
+  });
+  if (!parentPost) return { error: "Post not found" };
+  if (parentPost.parentId !== null) return { error: "Cannot reply to a reply" };
+
+  await prisma.post.create({
+    data: {
+      content: trimmed,
+      authorId: session.user.id,
+      parentId: parentPostId,
+      media: {
+        create: media.map((m) => ({
+          url: m.url,
+          objectKey: m.objectKey,
+          mediaType: getMediaCategory(m.mimeType),
+          mimeType: m.mimeType,
+          fileName: m.fileName,
+          fileSize: m.fileSize,
+          width: m.width ?? null,
+          height: m.height ?? null,
+          durationSeconds: m.durationSeconds ?? null,
+        })),
+      },
+    },
+  });
+
+  revalidatePath(`/post/${parentPostId}`);
+  return { success: true };
+}

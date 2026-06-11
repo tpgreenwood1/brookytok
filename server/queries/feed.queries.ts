@@ -1,41 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { PostWithAuthor } from "@/types";
-
-const authorSelect = {
-  id: true,
-  username: true,
-  displayName: true,
-  name: true,
-  image: true,
-} as const;
-
-const reactionSelect = {
-  userId: true,
-  type: true,
-} as const;
-
-function mapReactions(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  posts: any[],
-  currentUserId?: string
-): PostWithAuthor[] {
-  return posts.map((p) => {
-    const reactions: { userId: string; type: string }[] = p.reactions ?? [];
-    const myReaction = currentUserId
-      ? ((reactions.find((r) => r.userId === currentUserId)?.type ?? null) as
-          | "like"
-          | "dislike"
-          | null)
-      : null;
-    const { reactions: _r, ...rest } = p;
-    return {
-      ...rest,
-      likeCount: reactions.filter((r) => r.type === "like").length,
-      dislikeCount: reactions.filter((r) => r.type === "dislike").length,
-      myReaction,
-    };
-  });
-}
+import { postInclude, mapPosts } from "./_shared";
 
 export async function getFeed(
   cursor?: string,
@@ -45,14 +10,11 @@ export async function getFeed(
   const posts = await prisma.post.findMany({
     take: limit,
     ...(cursor && { skip: 1, cursor: { id: cursor } }),
+    where: { parentId: null },
     orderBy: { createdAt: "desc" },
-    include: {
-      author: { select: authorSelect },
-      media: { orderBy: { createdAt: "asc" } },
-      reactions: { select: reactionSelect },
-    },
+    include: postInclude,
   });
-  return mapReactions(posts, currentUserId);
+  return mapPosts(posts, currentUserId);
 }
 
 export async function getFollowingFeed(
@@ -64,16 +26,13 @@ export async function getFollowingFeed(
     take: limit,
     ...(cursor && { skip: 1, cursor: { id: cursor } }),
     where: {
+      parentId: null,
       author: {
         followers: { some: { followerId: userId } },
       },
     },
     orderBy: { createdAt: "desc" },
-    include: {
-      author: { select: authorSelect },
-      media: { orderBy: { createdAt: "asc" } },
-      reactions: { select: reactionSelect },
-    },
+    include: postInclude,
   });
-  return mapReactions(posts, userId);
+  return mapPosts(posts, userId);
 }

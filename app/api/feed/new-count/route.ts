@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   if (!refPost) return NextResponse.json({ count: 0 });
 
   const count = await prisma.post.count({
-    where: { createdAt: { gt: refPost.createdAt } },
+    where: { createdAt: { gt: refPost.createdAt }, parentId: null },
   });
 
   return NextResponse.json({ count });
