@@ -19,18 +19,20 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // App-specific fields
-  username        String    @unique
-  displayUsername String?
-  displayName     String?
-  bio             String?
-  bannerImage     String?
+  username              String      @unique
+  displayUsername       String?
+  displayName           String?
+  bio                   String?
+  bannerImage           String?
+  dailyTimeLimitMinutes Int?
 
-  sessions   Session[]
-  accounts   Account[]
-  posts      Post[]
-  followers  Follow[]    @relation("FollowTarget")
-  following  Follow[]    @relation("FollowSource")
-  reactions  Reaction[]
+  sessions    Session[]
+  accounts    Account[]
+  posts       Post[]
+  followers   Follow[]     @relation("FollowTarget")
+  following   Follow[]     @relation("FollowSource")
+  reactions   Reaction[]
+  dailyUsages DailyUsage[]
 
   @@map("user")
 }
@@ -155,4 +157,18 @@ model Reaction {
   @@index([postId])
   @@index([userId])
   @@map("reaction")
+}
+
+model DailyUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date
+  seconds   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@map("daily_usage")
 }

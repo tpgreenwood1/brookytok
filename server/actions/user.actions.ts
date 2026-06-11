@@ -57,3 +57,26 @@ export async function updateBannerImage(
   revalidatePath("/");
   return { success: true };
 }
+
+export async function setDailyTimeLimit(
+  minutes: number | null
+): Promise<{ error?: string; success?: boolean }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return { error: "Unauthorized" };
+
+  if (
+    minutes !== null &&
+    (!Number.isInteger(minutes) || minutes < 1 || minutes > 1440)
+  ) {
+    return { error: "Limit must be between 1 and 1440 minutes" };
+  }
+
+  const user = await prisma.user.update({
+    where: { id: session.user.id },
+    data: { dailyTimeLimitMinutes: minutes },
+    select: { username: true },
+  });
+
+  revalidatePath(`/${user.username}`);
+  return { success: true };
+}

@@ -12,6 +12,7 @@ export async function getUserByUsername(username: string): Promise<UserProfile |
       bio: true,
       image: true,
       bannerImage: true,
+      dailyTimeLimitMinutes: true,
       createdAt: true,
       _count: {
         select: {

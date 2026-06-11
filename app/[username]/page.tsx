@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { Shell } from "@/components/layout/shell";
 import { ProfileHeader } from "@/components/user/profile-header";
 import { PostList } from "@/components/post/post-list";
+import { TimeLimitForm } from "@/components/user/time-limit-form";
 import { getUserByUsername, getIsFollowing } from "@/server/queries/user.queries";
 import { getPostsByUsername } from "@/server/queries/post.queries";
 
@@ -49,6 +50,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         isOwnProfile={isOwnProfile}
         isFollowing={isFollowing}
       />
+      {isOwnProfile && (
+        <div className="px-4 py-5 border-b border-border">
+          <h2 className="text-sm font-semibold mb-3">Daily time limit</h2>
+          <TimeLimitForm currentLimitMinutes={user.dailyTimeLimitMinutes} />
+        </div>
+      )}
       <PostList posts={posts} emptyMessage="No posts yet." />
     </Shell>
   );

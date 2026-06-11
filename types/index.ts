@@ -41,6 +41,7 @@ export type UserProfile = {
   bio: string | null;
   image: string | null;
   bannerImage: string | null;
+  dailyTimeLimitMinutes: number | null;
   createdAt: Date;
   _count: {
     posts: number;
