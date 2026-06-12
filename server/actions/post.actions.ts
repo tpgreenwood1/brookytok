@@ -28,6 +28,20 @@ export async function createPost(
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "Unauthorized" };
 
+  const weeklyLimit = parseInt(process.env.POST_WEEKLY_LIMIT ?? "20", 10);
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const weeklyCount = await prisma.post.count({
+    where: {
+      authorId: session.user.id,
+      createdAt: { gte: oneWeekAgo },
+    },
+  });
+  if (weeklyCount >= weeklyLimit) {
+    return {
+      error: `Weekly post limit of ${weeklyLimit} reached. Try again next week.`,
+    };
+  }
+
   const trimmed = content.trim();
   const hasMedia = media.length > 0;
   if (!trimmed && !hasMedia) return { error: "Post must have text or media" };
@@ -78,6 +92,20 @@ export async function createComment(
 ): Promise<{ error?: string; success?: boolean }> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "Unauthorized" };
+
+  const weeklyLimit = parseInt(process.env.POST_WEEKLY_LIMIT ?? "20", 10);
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const weeklyCount = await prisma.post.count({
+    where: {
+      authorId: session.user.id,
+      createdAt: { gte: oneWeekAgo },
+    },
+  });
+  if (weeklyCount >= weeklyLimit) {
+    return {
+      error: `Weekly post limit of ${weeklyLimit} reached. Try again next week.`,
+    };
+  }
 
   const trimmed = content.trim();
   const hasMedia = media.length > 0;

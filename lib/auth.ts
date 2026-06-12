@@ -30,6 +30,12 @@ export const auth = betterAuth({
         defaultValue: null,
         input: false,
       },
+      approved: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+        input: false,
+      },
     },
   },
   trustedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],

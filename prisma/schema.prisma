@@ -25,6 +25,7 @@ model User {
   bio                   String?
   bannerImage           String?
   dailyTimeLimitMinutes Int?
+  approved              Boolean   @default(false)
 
   sessions    Session[]
   accounts    Account[]
