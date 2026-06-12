@@ -26,7 +26,7 @@ export default function PendingApprovalPage() {
             app once an admin approves your registration.
           </p>
         </div>
-        <Button variant="outline" onClick={handleSignOut}>
+        <Button variant="secondary" onClick={handleSignOut}>
           Sign out
         </Button>
       </div>
