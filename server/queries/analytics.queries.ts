@@ -121,6 +121,31 @@ export async function getTopUsersByPosts(limit = 10) {
   });
 }
 
+export async function getStorageStats() {
+  const [totals, byType] = await Promise.all([
+    prisma.media.aggregate({ _sum: { fileSize: true }, _count: true }),
+    prisma.media.groupBy({
+      by: ["mediaType"],
+      _sum: { fileSize: true },
+      _count: true,
+    }),
+  ]);
+
+  const imageRow = byType.find((r) => r.mediaType === "image");
+  const videoRow = byType.find((r) => r.mediaType === "video");
+
+  return {
+    totalBytes: totals._sum.fileSize ?? 0,
+    totalFiles: totals._count,
+    images: { bytes: imageRow?._sum.fileSize ?? 0, count: imageRow?._count ?? 0 },
+    videos: { bytes: videoRow?._sum.fileSize ?? 0, count: videoRow?._count ?? 0 },
+  };
+}
+
+export async function getPendingApprovalCount() {
+  return prisma.user.count({ where: { approved: false } });
+}
+
 export async function getTopUsersByTime(limit = 10) {
   const grouped = await prisma.dailyUsage.groupBy({
     by: ["userId"],

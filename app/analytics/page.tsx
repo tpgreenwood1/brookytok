@@ -4,16 +4,20 @@ import {
   getDailyActivity,
   getTopUsersByPosts,
   getTopUsersByTime,
+  getStorageStats,
+  getPendingApprovalCount,
 } from "@/server/queries/analytics.queries";
 
 export const metadata: Metadata = { title: "Analytics" };
 
 export default async function AnalyticsPage() {
-  const [overview, activity, topByPosts, topByTime] = await Promise.all([
+  const [overview, activity, topByPosts, topByTime, storage, pendingCount] = await Promise.all([
     getAnalyticsTotals(),
     getDailyActivity(14),
     getTopUsersByPosts(10),
     getTopUsersByTime(10),
+    getStorageStats(),
+    getPendingApprovalCount(),
   ]);
 
   const { totals, last7Days } = overview;
@@ -38,6 +42,20 @@ export default async function AnalyticsPage() {
             <StatCard label="Likes" value={totals.likes} />
             <StatCard label="Follows" value={totals.follows} />
             <StatCard label="Time Spent" value={formatHours(totals.timeSpentHours * 3600)} />
+            <StatCard label="Pending approval" value={pendingCount} />
+          </div>
+        </section>
+
+        {/* Storage */}
+        <section className="mb-8">
+          <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
+            Storage (R2)
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <StatCard label="Total used" value={formatBytes(storage.totalBytes)} />
+            <StatCard label="Media files" value={storage.totalFiles} />
+            <StatCard label="Images" value={`${storage.images.count} · ${formatBytes(storage.images.bytes)}`} />
+            <StatCard label="Videos" value={`${storage.videos.count} · ${formatBytes(storage.videos.bytes)}`} />
           </div>
         </section>
 
@@ -145,6 +163,13 @@ function SummaryRow({ label, value }: { label: string; value: number }) {
       <dd className="font-medium tabular-nums">{value.toLocaleString()}</dd>
     </div>
   );
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
+  return `${(bytes / 1024 ** 3).toFixed(2)} GB`;
 }
 
 function formatDate(dateStr: string): string {
