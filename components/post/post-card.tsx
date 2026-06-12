@@ -74,13 +74,7 @@ export function PostCard({ post, variant = "feed" }: PostCardProps) {
 
         {/* Full-width media — no padding, no border-radius */}
         {effectivePost.media.length > 0 && (
-          <Link
-            href={`/post/${effectivePost.id}`}
-            tabIndex={-1}
-            aria-label="View post"
-          >
-            <MediaGrid media={effectivePost.media} />
-          </Link>
+          <MediaGrid media={effectivePost.media} />
         )}
 
         {/* Action bar — 12px padding, 8px vertical */}
