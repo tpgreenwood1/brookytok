@@ -1,7 +1,14 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Image as ImageIcon, Video } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Image as ImageIcon, Video, Type } from "lucide-react";
+
+// Dynamic import — fabric.js accesses window/document at module evaluation time
+const TextCardCreator = dynamic(
+  () => import("@/components/text-card-creator").then((m) => m.TextCardCreator),
+  { ssr: false }
+);
 import { authClient } from "@/lib/auth-client";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -87,6 +94,7 @@ export function PostComposer() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [showTextCard, setShowTextCard] = useState(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -248,6 +256,16 @@ export function PostComposer() {
               <Video className="w-4 h-4" />
             </button>
 
+            <button
+              type="button"
+              onClick={() => setShowTextCard(true)}
+              disabled={atMaxAttachments || isPending}
+              aria-label="Create text card"
+              className="p-1.5 rounded-full text-brand hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <Type className="w-4 h-4" />
+            </button>
+
             {attachments.length > 0 && (
               <span className="text-xs text-fg-muted ml-1">
                 {attachments.length}/{MAX_ATTACHMENTS_PER_POST}
@@ -266,6 +284,18 @@ export function PostComposer() {
           </div>
         </div>
       </div>
+
+      {/* Text card creator — fixed overlay, outside normal form flow */}
+      {showTextCard && (
+        <TextCardCreator
+          onExport={(blob) => {
+            const file = new File([blob], "text-card.jpg", { type: "image/jpeg" });
+            processFiles([file]);
+            setShowTextCard(false);
+          }}
+          onClose={() => setShowTextCard(false)}
+        />
+      )}
     </form>
   );
 }
